@@ -97,15 +97,10 @@ Future<void> _launchUrl() async {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Write to Us'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_outlined),
-          onPressed: () {
-            Navigator.pop(context); // Use pop to go back
-          },
-        ),
-      ),
+      appBar: AppBar(title: Text('Write to us',style: const TextStyle(color: Colors.white),),
+        backgroundColor: Colors.deepPurple, // Set the background color to deep purple
+    iconTheme: const IconThemeData(color: Colors.white), 
+     ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -213,7 +208,7 @@ Future<void> _launchUrl() async {
                             ],
                           )
                         : const Text(
-                            'Sign up',
+                            'Send',
                             style: TextStyle(color: Colors.white),
                           ),
                 ),

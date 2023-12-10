@@ -70,10 +70,10 @@ Future<void> checkPaymentState() async {
     );
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      print(response.body);
+      // print(response.body);
 
       // Print the values before comparison
-      print('Old Payment State: $old_payment_state');
+      // print('Old Payment State: $old_payment_state');
       // print('New Payment State: ${responseData['state']}');
 
       setState(() {
@@ -88,7 +88,8 @@ Future<void> checkPaymentState() async {
       }
     }
   } catch (e) {
-    print(e);
+    // print(e);
+    //  ApiResponse.showSnackBar(context, 'Network error. Check your internet connection.');
   } finally {
     // Schedule the next execution after 5 seconds
     Future.delayed(const Duration(seconds: 5), () => checkPaymentState());

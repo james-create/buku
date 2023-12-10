@@ -221,7 +221,6 @@ Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
   return Scaffold(
       appBar: AppBar(title: Text(title,style: const TextStyle(color: Colors.white),),
-     
         backgroundColor: Colors.deepPurple, // Set the background color to deep purple
     iconTheme: const IconThemeData(color: Colors.white), 
      ),

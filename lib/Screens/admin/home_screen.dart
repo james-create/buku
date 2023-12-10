@@ -38,30 +38,98 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchApiData();
   }
 
-  Future<void> fetchApiData() async {
-    String apiUrl = "$appApiUrl/books";
-    final Map<String, String> headers = {
-      'Authorization': 'Bearer $token',
-    };
-    try {
-      final response = await http.get(Uri.parse(apiUrl), headers: headers);
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final books = responseData['book'];
-        setState(() {
-          responseItems = books;
-          filteredBooks = books;
+
+
+Future<void> fetchApiData() async {
+  // Check if the widget is still mounted before proceeding
+  if (!mounted) return;
+
+  String apiUrl = "$appApiUrl/books";
+  final Map<String, String> headers = {
+    'Authorization': 'Bearer $token',
+  };
+
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    // Check if the widget is still mounted before updating the state
+    if (!mounted) return;
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final books = responseData['book'];
+
+      setState(() {
+        responseItems = books;
+        filteredBooks = books;
+      });
+
+      // Check if books are returned
+      if (books.isNotEmpty) {
+        // Set a delay before fetching again (adjust the duration accordingly)
+        Future.delayed(Duration(seconds: 60), () {
+          if (!mounted || !isLoading) {
+            fetchApiData();
+          }
+        });
+      } else {
+        // No books returned, set a shorter delay (adjust the duration accordingly)
+        Future.delayed(Duration(seconds: 10), () {
+          if (!mounted || !isLoading) {
+            fetchApiData();
+          }
         });
       }
-    } catch (e) {
-       ApiResponse.showSnackBar(context, 'Network error. Check your internet connection.');
-          // showCustomErrorMessage(context,'Network error. Check your internet connection');  
-    } finally {
+    }
+  } catch (e) {
+    // Check if the widget is still mounted before showing a snackbar
+    if (mounted) {
+      ApiResponse.showSnackBar(context, 'Network error. Check your internet connection.');
+    }
+
+    // On error, set a shorter delay before fetching again (adjust the duration accordingly)
+    Future.delayed(Duration(seconds: 10), () {
+      if (!mounted || !isLoading) {
+        fetchApiData();
+      }
+    });
+  } finally {
+    // Check if the widget is still mounted before updating the state
+    if (mounted) {
       setState(() {
         isLoading = false;
       });
     }
   }
+}
+
+
+
+
+
+  // Future<void> fetchApiData() async {
+  //   String apiUrl = "$appApiUrl/books";
+  //   final Map<String, String> headers = {
+  //     'Authorization': 'Bearer $token',
+  //   };
+  //   try {
+  //     final response = await http.get(Uri.parse(apiUrl), headers: headers);
+  //     if (response.statusCode == 200) {
+  //       final responseData = json.decode(response.body);
+  //       final books = responseData['book'];
+  //       setState(() {
+  //         responseItems = books;
+  //         filteredBooks = books;
+  //       });
+  //     }
+  //   } catch (e) {
+  //      ApiResponse.showSnackBar(context, 'Network error. Check your internet connection.');
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
  void _filterBooks() {
   final query = _searchController.text.toLowerCase();
